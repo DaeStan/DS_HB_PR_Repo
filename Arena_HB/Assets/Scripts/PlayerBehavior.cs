@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class PlayerBehavior : MonoBehaviour
      public float jumpVelocity = 5f;
      public float distanceToGround = 0.1f;
      public LayerMask groundLayer;
+
+     private GameBehavior _gameManager;
 
      public GameObject bullet;
      public float bulletSpeed = 100f;
@@ -22,14 +25,22 @@ public class PlayerBehavior : MonoBehaviour
      void Start()
      {
          _rb = GetComponent<Rigidbody>();
- 
          _col = GetComponent<CapsuleCollider>();
+         _gameManager = GameObject.Find("GameManager").GetComponent<GameBehavior>();
      }
  
      void Update()
      {
          vInput = Input.GetAxis("Vertical") * moveSpeed;
          hInput = Input.GetAxis("Horizontal") * rotateSpeed;
+     }
+
+     void OnCollisionEnter(Collision collision)
+     {
+         if(collision.gameObject.name == "Enemy")
+         {
+             _gameManager.HP -= 1;
+         }
      }
 
      void FixedUpdate()
